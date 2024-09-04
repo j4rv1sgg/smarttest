@@ -1,18 +1,30 @@
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { setUsers } from '@/state/slices/tableSlice';
 import { FilterKeys } from '@/types';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import SearchInput from './SearchInput';
 import UserTable from './UserTable';
 import { ModeToggle } from './ModeToggle';
 
 export const Content: React.FC = () => {
   const dispatch = useAppDispatch();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     fetch('https://jsonplaceholder.typicode.com/users')
-      .then((response) => response.json())
-      .then((data) => dispatch(setUsers(data)));
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        dispatch(setUsers(data));
+        setLoading(false);
+      })
+      .catch((error) => {
+        setError('Failed to fetch users');
+        setLoading(false);
+        console.error(error);
+      });
   }, [dispatch]);
 
   const filterKeys: FilterKeys[] = ['name', 'username', 'email', 'phone'];
@@ -28,7 +40,10 @@ export const Content: React.FC = () => {
           <SearchInput key={key} filterKey={key} />
         ))}
       </div>
-      <UserTable />
+      {loading && <p className="text-center mt-36">Loading...</p>}
+      {error && <p className="text-center mt-36 text-red-700">{error}</p>}
+
+      {!loading && !error && <UserTable />}
     </div>
   );
 };

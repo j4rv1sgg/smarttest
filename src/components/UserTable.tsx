@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useAppSelector } from '../hooks/useAppSelector';
 import { User } from '../types';
 import {
@@ -14,15 +14,17 @@ import {
 const UserTable: React.FC = () => {
   const { users, filters } = useAppSelector((state) => state.app);
 
-  const filteredUsers = users.filter((user) =>
-    Object.entries(filters).every(([key, value]) => {
-      const userValue = user[key as keyof User];
-      return (
-        typeof userValue === 'string' &&
-        userValue.toLowerCase().includes(value.toLowerCase())
-      );
-    })
-  );
+  const filteredUsers = useMemo(() => {
+    return users.filter((user) =>
+      Object.entries(filters).every(([key, value]) => {
+        const userValue = user[key as keyof User];
+        return (
+          typeof userValue === 'string' &&
+          userValue.toLowerCase().includes(value.toLowerCase())
+        );
+      })
+    );
+  }, [filters, users])
 
   return (
     <Table>

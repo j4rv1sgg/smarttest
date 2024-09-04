@@ -1,6 +1,6 @@
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { setUsers } from '@/state/slices/tableSlice';
-import { AppState } from '@/types';
+import { FilterKeys } from '@/types';
 import { useEffect } from 'react';
 import SearchInput from './SearchInput';
 import UserTable from './UserTable';
@@ -15,12 +15,7 @@ export const Content: React.FC = () => {
       .then((data) => dispatch(setUsers(data)));
   }, [dispatch]);
 
-  const filterKeys: (keyof AppState['filters'])[] = [
-    'name',
-    'username',
-    'email',
-    'phone',
-  ];
+  const filterKeys: FilterKeys[] = ['name', 'username', 'email', 'phone'];
 
   return (
     <div className="container p-4">

@@ -1,14 +1,14 @@
-import './App.css'
+import React from 'react';
+import { Provider } from 'react-redux';
+import { store } from './state/state';
+import { ThemeProvider } from './components/ThemeProvider';
 
-function App() {
+const App: React.FC<React.PropsWithChildren<object>> = ({ children }) => (
+  <Provider store={store}>
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      {children}
+    </ThemeProvider>
+  </Provider>
+);
 
-  return (
-    <>
-     <h1 className="text-3xl font-bold underline">
-      Hello world!
-    </h1>
-    </>
-  )
-}
-
-export default App
+export default App;
